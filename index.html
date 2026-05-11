@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semak Kokurikulum — SK Sri Aman</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue:      #1a3fa8;
+  --blue-mid:  #2d56d1;
+  --blue-lite: #eef2ff;
+  --blue-ring: rgba(26,63,168,.12);
+  --green:     #059669;
+  --green-bg:  #d1fae5;
+  --amber:     #d97706;
+  --amber-bg:  #fef3c7;
+  --red:       #dc2626;
+  --red-bg:    #fee2e2;
+  --slate:     #64748b;
+  --border:    #e2e8f0;
+  --surface:   #ffffff;
+  --bg:        #f0f4fb;
+  --text:      #0f172a;
+  --r:         16px;
+  --r-sm:      10px;
+  --sh:        0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(26,63,168,.07);
+  --sh-md:     0 2px 8px rgba(0,0,0,.06), 0 8px 28px rgba(26,63,168,.12);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:80px}
+
+.hdr{background:linear-gradient(135deg,#0f2a80 0%,#1a3fa8 45%,#2d56d1 100%);position:sticky;top:0;z-index:200;box-shadow:0 2px 20px rgba(15,42,128,.35)}
+.hdr-in{max-width:700px;margin:auto;padding:16px 18px;display:flex;align-items:center;gap:14px}
+.hdr-logo{width:44px;height:44px;background:rgba(255,255,255,.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;border:1px solid rgba(255,255,255,.2)}
+.hdr-text h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:1rem;font-weight:800;color:#fff;letter-spacing:-.2px}
+.hdr-text p{font-size:.76rem;color:rgba(255,255,255,.65);margin-top:1px}
+
+.wrap{max-width:700px;margin:auto;padding:24px 16px 0}
+
+.search-card{background:var(--surface);border-radius:var(--r);box-shadow:var(--sh);padding:26px 22px 22px;margin-bottom:20px}
+.search-card h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:.95rem;font-weight:800;color:var(--blue);margin-bottom:4px}
+.search-card p{font-size:.8rem;color:var(--slate);margin-bottom:16px}
+.ic-row{display:flex;gap:10px}
+.ic-in{flex:1;padding:13px 16px;border:2px solid var(--border);border-radius:var(--r-sm);font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:500;color:var(--text);background:#f8fafc;outline:none;letter-spacing:1.5px;transition:border-color .2s,box-shadow .2s}
+.ic-in:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-ring);background:#fff}
+.ic-in::placeholder{letter-spacing:0;font-weight:400;color:#b0bec5}
+.btn-cari{padding:13px 22px;background:var(--blue);color:#fff;border:none;border-radius:var(--r-sm);font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.88rem;cursor:pointer;transition:background .15s,transform .1s;white-space:nowrap}
+.btn-cari:hover{background:var(--blue-mid)}
+.btn-cari:active{transform:scale(.97)}
+.btn-cari:disabled{background:#94a3b8;cursor:not-allowed}
+.err{background:var(--red-bg);color:#991b1b;border-radius:var(--r-sm);padding:11px 15px;font-size:.82rem;font-weight:500;margin-bottom:14px;display:none}
+
+.loading{display:none;text-align:center;padding:50px 20px}
+.spin{width:38px;height:38px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .65s linear infinite;margin:0 auto 14px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading p{font-size:.84rem;color:var(--slate)}
+
+.not-found{display:none;text-align:center;padding:50px 20px}
+.not-found .ico{font-size:3rem;margin-bottom:14px}
+.not-found h3{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;margin-bottom:6px}
+.not-found p{font-size:.82rem;color:var(--slate)}
+
+.stu-card{background:var(--surface);border-radius:var(--r);box-shadow:var(--sh);padding:20px 22px;margin-bottom:16px;border-left:5px solid var(--blue)}
+.stu-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.05rem;font-weight:900;color:var(--blue);text-transform:uppercase;letter-spacing:.2px;margin-bottom:10px}
+.tags{display:flex;gap:7px;flex-wrap:wrap}
+.tag{display:inline-flex;align-items:center;padding:4px 11px;border-radius:20px;font-size:.73rem;font-weight:700;gap:4px}
+.tag-kelas{background:#e0e7ff;color:#3730a3}
+.tag-kuning{background:#fef9c3;color:#854d0e}
+.tag-merah{background:var(--red-bg);color:#991b1b}
+.tag-hijau{background:var(--green-bg);color:#065f46}
+.tag-biru{background:#dbeafe;color:#1e40af}
+
+.sec{font-family:'Plus Jakarta Sans',sans-serif;font-size:.88rem;font-weight:800;color:var(--text);margin:22px 0 11px;display:flex;align-items:center;gap:9px}
+.sec::after{content:'';flex:1;height:2px;background:var(--border);border-radius:2px}
+
+.unit-card{background:var(--surface);border-radius:var(--r);box-shadow:var(--sh);padding:15px 18px;margin-bottom:9px;display:flex;align-items:center;gap:14px;transition:box-shadow .18s}
+.unit-card:hover{box-shadow:var(--sh-md)}
+.unit-ico{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.unit-info{flex:1;min-width:0}
+.unit-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.unit-badge{display:inline-block;font-size:.68rem;font-weight:700;padding:2px 9px;border-radius:10px}
+.badge-ub{background:var(--red-bg);color:#991b1b}
+.badge-kp{background:var(--amber-bg);color:#92400e}
+.badge-s{background:var(--green-bg);color:#065f46}
+.unit-pct{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.15rem;font-weight:800;min-width:56px;text-align:right}
+.pct-100{color:var(--green)}
+.pct-hi{color:#16a34a}
+.pct-mid{color:var(--amber)}
+.pct-lo{color:var(--red)}
+.unit-jaw{font-size:.72rem;color:var(--slate);font-weight:500;margin-top:3px}
+.unit-jaw span{color:var(--blue);font-weight:700}
+
+.rekod-card{background:var(--surface);border-radius:var(--r);box-shadow:var(--sh);padding:17px 20px;margin-bottom:11px;position:relative}
+.rekod-num{width:24px;height:24px;background:var(--blue);color:#fff;border-radius:50%;font-size:.7rem;font-weight:700;display:inline-flex;align-items:center;justify-content:center;margin-bottom:10px}
+.rtags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.rtag{padding:3px 10px;border-radius:12px;font-size:.7rem;font-weight:700}
+.rtag-pen{background:#dbeafe;color:#1e40af}
+.rtag-cai{background:var(--green-bg);color:#065f46}
+.rtag-zon{background:#f3e8ff;color:#6b21a8}
+.rtag-daerah{background:var(--amber-bg);color:#92400e}
+.rtag-negeri{background:#ede9fe;color:#4c1d95}
+.rtag-kebangsaan{background:var(--red-bg);color:#991b1b}
+.rtag-j1{background:#fef9c3;color:#78350f}
+.rtag-j2{background:#f1f5f9;color:#334155}
+.rtag-j3{background:#fde8d3;color:#7c3909}
+.rekod-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.93rem;text-transform:uppercase;margin-bottom:6px}
+.rekod-meta{font-size:.77rem;color:var(--slate);display:flex;gap:12px;flex-wrap:wrap}
+.medal-float{position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:2.2rem}
+.sijil-btn{display:inline-flex;align-items:center;gap:5px;margin-top:10px;font-size:.76rem;font-weight:700;color:var(--blue);padding:5px 12px;background:var(--blue-lite);border-radius:8px;text-decoration:none;transition:background .15s}
+.sijil-btn:hover{background:#c7d2fe}
+
+.anugerah-card{background:linear-gradient(135deg,#fffbeb,#fef3c7);border:2px solid #f59e0b;border-radius:var(--r);padding:16px 20px;margin-bottom:12px;display:flex;align-items:center;gap:14px}
+.anugerah-ico{font-size:2.8rem}
+.anugerah-label{font-size:.68rem;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:.8px}
+.anugerah-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;font-size:1.1rem;color:#78350f}
+.anugerah-sub{font-size:.78rem;color:#a16207;font-weight:500}
+
+.medal-summary{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:11px}
+.mbadge{display:flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;font-size:.8rem;font-weight:800}
+.mbadge-emas{background:#fef3c7;color:#78350f}
+.mbadge-perak{background:#f1f5f9;color:#334155}
+.mbadge-gangsa{background:#fde8d3;color:#7c3909}
+
+.sukan-list{background:var(--surface);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;margin-bottom:12px}
+.sukan-item{display:flex;align-items:center;padding:13px 18px;border-bottom:1px solid var(--border);gap:12px}
+.sukan-item:last-child{border-bottom:none}
+.sdot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.sdot-1{background:#f59e0b}
+.sdot-2{background:#94a3b8}
+.sdot-3{background:#cd7f32}
+.sdot-x{background:#e2e8f0}
+.sacara{flex:1;font-size:.88rem;font-weight:600}
+.sked{font-size:.76rem;color:var(--slate);font-weight:500;text-align:right}
+
+.footer{text-align:center;margin-top:40px;font-size:.74rem;color:var(--slate);padding:0 20px}
+.footer strong{color:var(--blue)}
+
+@media(max-width:480px){
+  .ic-row{flex-direction:column}
+  .medal-float{display:none}
+  .rekod-meta{flex-direction:column;gap:3px}
+}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-in">
+    <div class="hdr-logo">🏫</div>
+    <div class="hdr-text">
+      <h1>Semak Pencapaian Kokurikulum</h1>
+      <p>SK Sri Aman, Ayer Itam, Pulau Pinang &mdash; Tahun 2026</p>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="search-card">
+    <h2>🔐 Masukkan Nombor Kad Pengenalan</h2>
+    <p>Masukkan no. IC murid (12 digit, tanpa sempang) untuk semak rekod kokurikulum.</p>
+    <div id="errMsg" class="err"></div>
+    <div class="ic-row">
+      <input type="text" id="icIn" class="ic-in"
+        placeholder="Contoh: 140523071234"
+        maxlength="12" inputmode="numeric" autocomplete="off">
+      <button class="btn-cari" id="btnCari" onclick="semak()">🔍 Semak</button>
+    </div>
+  </div>
+
+  <div class="loading" id="loading">
+    <div class="spin"></div>
+    <p>Sedang mendapatkan maklumat murid...</p>
+  </div>
+
+  <div class="not-found" id="notFound">
+    <div class="ico">🔎</div>
+    <h3>Rekod Tidak Dijumpai</h3>
+    <p>Nombor IC tidak ditemui dalam sistem.<br>Sila pastikan nombor IC adalah betul.</p>
+  </div>
+
+  <div id="result" style="display:none"></div>
+
+  <div class="footer">
+    Sistem Maklumat Kokurikulum &bull; <strong>SK Sri Aman</strong><br>
+    Paparan sahaja &mdash; tiada perubahan boleh dibuat melalui halaman ini
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp }       from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const app = initializeApp({
+  apiKey:            "AIzaSyAm32BnHvNzO41haR8umdrjBs0qN5E_37o",
+  authDomain:        "kokodata-5d5e2.firebaseapp.com",
+  databaseURL:       "https://kokodata-5d5e2-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:         "kokodata-5d5e2",
+  storageBucket:     "kokodata-5d5e2.firebasestorage.app",
+  messagingSenderId: "589237221293",
+  appId:             "1:589237221293:web:3feec373a23c8c0d4fd324"
+});
+const db    = getDatabase(app);
+const TAHUN = 2026;
+
+/* ── HELPERS ── */
+function norm(s){
+  return (s||'').toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim();
+}
+const nameEq = (a,b) => norm(a) === norm(b);
+const gv     = snap => snap.exists() ? snap.val() : null;
+const fNode  = path => get(ref(db,path)).then(gv);
+
+function rumahCls(r){
+  switch((r||'').toUpperCase()){
+    case 'KUNING': return 'tag-kuning';
+    case 'MERAH':  return 'tag-merah';
+    case 'HIJAU':  return 'tag-hijau';
+    case 'BIRU':   return 'tag-biru';
+    default:       return 'tag-kelas';
+  }
+}
+
+function unitMeta(uid, uName){
+  const u = (uid||'').toLowerCase();
+  const n = (uName||'').toLowerCase();
+  if(u.startsWith('ub'))                           return {ico:'🎖️',bg:'#fee2e2',bdg:'badge-ub',jenis:'Unit Beruniform'};
+  if(u.startsWith('s'))                            return {ico:'⚽',bg:'#d1fae5',bdg:'badge-s', jenis:'1 Murid 1 Sukan (1M1S)'};
+  if(n.includes('muzik')||n.includes('kebudayaan'))return {ico:'🎵',bg:'#fef9c3',bdg:'badge-kp',jenis:'Kelab & Persatuan'};
+  if(n.includes('stem')||n.includes('robotik'))    return {ico:'🤖',bg:'#fef9c3',bdg:'badge-kp',jenis:'Kelab & Persatuan'};
+  if(n.includes('doktor'))                         return {ico:'🩺',bg:'#fef9c3',bdg:'badge-kp',jenis:'Kelab & Persatuan'};
+  if(n.includes('agama')||n.includes('islam'))     return {ico:'📖',bg:'#fef9c3',bdg:'badge-kp',jenis:'Kelab & Persatuan'};
+  if(n.includes('bahasa'))                         return {ico:'💬',bg:'#fef9c3',bdg:'badge-kp',jenis:'Kelab & Persatuan'};
+  if(n.includes('kitar'))                          return {ico:'♻️',bg:'#fef9c3',bdg:'badge-kp',jenis:'Kelab & Persatuan'};
+  if(n.includes('tvpss')||n.includes('sumber'))    return {ico:'📺',bg:'#fef9c3',bdg:'badge-kp',jenis:'Kelab & Persatuan'};
+  return {ico:'⭐',bg:'#fef9c3',bdg:'badge-kp',jenis:'Kelab & Persatuan'};
+}
+
+const pctCls = p => p===100?'pct-100':p>=80?'pct-hi':p>=60?'pct-mid':'pct-lo';
+
+function lvlCls(l){
+  switch((l||'').toLowerCase()){
+    case 'zon':        return 'rtag-zon';
+    case 'daerah':     return 'rtag-daerah';
+    case 'negeri':     return 'rtag-negeri';
+    case 'kebangsaan': return 'rtag-kebangsaan';
+    default:           return 'rtag-daerah';
+  }
+}
+
+function kedCls(k){
+  const c = (k||'').toLowerCase();
+  if(c.includes('pertama')||c==='1'||c==='johan')    return 'rtag-j1';
+  if(c.includes('kedua')||c==='2'||c.includes('naib')) return 'rtag-j2';
+  return 'rtag-j3';
+}
+
+function medalEmoji(k){
+  const c = (k||'').toLowerCase();
+  if(c.includes('pertama')||c==='1'||c==='johan')    return '🥇';
+  if(c.includes('kedua')||c==='2'||c.includes('naib')) return '🥈';
+  if(c.includes('ketiga')||c==='3')                  return '🥉';
+  return '';
+}
+
+function tempatLabel(t){
+  return t===1?'Johan':t===2?'Naib Johan':t===3?'Tempat Ketiga':`Tempat ${t}`;
+}
+
+const dotCls = t => t===1?'sdot-1':t===2?'sdot-2':t===3?'sdot-3':'sdot-x';
+
+function showErr(m){
+  const e = document.getElementById('errMsg');
+  e.textContent = m; e.style.display = 'block';
+}
+function setLoading(on){
+  document.getElementById('loading').style.display  = on ? 'block' : 'none';
+  document.getElementById('btnCari').disabled       = on;
+}
+
+/* ── MAIN ── */
+window.semak = async function(){
+  const ic = document.getElementById('icIn').value.trim().replace(/\D/g,'');
+  document.getElementById('errMsg').style.display    = 'none';
+  document.getElementById('notFound').style.display  = 'none';
+  document.getElementById('result').style.display    = 'none';
+  document.getElementById('result').innerHTML        = '';
+
+  if(!ic || ic.length < 10){
+    showErr('⚠️ Sila masukkan nombor IC yang lengkap (minimum 10 digit).'); return;
+  }
+
+  setLoading(true);
+  try{
+
+    /* 1 — IC → nama + kelas */
+    const icData = await fNode(`student_ic_map/data/${ic}`);
+    if(!icData){ setLoading(false); document.getElementById('notFound').style.display='block'; return; }
+    const { name: stuName, className: stuKelas } = icData;
+
+    /* 2 — Rumah sukan */
+    const stuRumah = (await fNode(`student_rumah_map/data/${stuName}`)) || '';
+
+    /* 3–9 — Fetch parallel */
+    const [usSnap, kmSnap, caSnap, arSnap, skSnap, mdSnap, olSnap] = await Promise.all([
+      get(ref(db,'unit_students')),
+      get(ref(db,'kehadiran_murid')),
+      get(ref(db,'carta_organisasi')),
+      get(ref(db,'achievement_reports')),
+      get(ref(db,`sukan_keputusan/${TAHUN}`)),
+      get(ref(db,`merentas_desa/${TAHUN}`)),
+      get(ref(db,`sukan_olahragawan_pilihan/${TAHUN}`))
+    ]);
+
+    const uStudents = gv(usSnap) || {};
+    const kHadir    = gv(kmSnap) || {};
+    const carta     = gv(caSnap) || {};
+    const achievs   = gv(arSnap) || {};
+    const sukanKed  = gv(skSnap) || {};
+    const mdData    = gv(mdSnap) || {};
+    const olahData  = gv(olSnap) || {};
+
+    /* 3 — Unit murid */
+    const myUnits = [];
+    for(const [uKey, uData] of Object.entries(uStudents)){
+      const classes = uData.classes || {};
+      let found = false;
+      for(const students of Object.values(classes)){
+        if(Array.isArray(students) && students.some(s => nameEq(s, stuName))){
+          myUnits.push({ unitId: uData.unitId || uKey, unitKey: uKey });
+          found = true; break;
+        }
+      }
+      if(found) continue;
+    }
+
+    /* 4 — Jawatan carta organisasi */
+    const jawatanMap = {};
+    for(const rec of Object.values(carta)){
+      if((rec.year||0) !== TAHUN) continue;
+      let jaw = '';
+      if(nameEq(rec.pengerusi||'', stuName))                                  jaw = 'Pengerusi';
+      else if(nameEq(rec.naibPengerusi||'', stuName))                         jaw = 'Naib Pengerusi';
+      else if(nameEq(rec.setiausaha||'', stuName))                            jaw = 'Setiausaha';
+      else if(nameEq(rec.bendahari||'', stuName))                             jaw = 'Bendahari';
+      else if((rec.ahliJawatankuasa||[]).some(a => nameEq(a, stuName)))       jaw = 'Ahli Jawatankuasa';
+      if(jaw) jawatanMap[norm(rec.unitName||'')] = jaw;
+    }
+
+    /* 5 — Kehadiran */
+    const unitNameLU = {};   // unitId → unitName
+    const hadir = {};
+    const total = {};
+    for(const rec of Object.values(kHadir)){
+      const uid  = rec.unitId  || '';
+      const uNm  = rec.unitName || uid;
+      if(uid) unitNameLU[uid] = uNm;
+      for(const cls of (rec.classes||[])){
+        for(const stu of (cls.students||[])){
+          if(nameEq(stu.name||'', stuName)){
+            hadir[uid] = (hadir[uid]||0) + (stu.status==='HADIR'?1:0);
+            total[uid] = (total[uid]||0) + 1;
+          }
+        }
+      }
+    }
+
+    /* 6 — Achievement reports */
+    const myRekod = [];
+    for(const rep of Object.values(achievs)){
+      if((rep.year||0) !== TAHUN) continue;
+      if((rep.participantsList||[]).some(p => nameEq(p, stuName))) myRekod.push(rep);
+    }
+    myRekod.sort((a,b)=>(b.competitionDate||'').localeCompare(a.competitionDate||''));
+
+    /* 7 — Sukan keputusan (balapan & padang) */
+    const sukanRes = [];
+    for(const ev of Object.values(sukanKed)){
+      for(const k of (ev.keputusan||[])){
+        if(nameEq(k.nama||'', stuName))
+          sukanRes.push({ acara: ev.acaraNama, tempat: k.tempat, result: k.result||'' });
+      }
+    }
+
+    /* 8 — Merentas desa */
+    const mdRes = [];
+    for(const [catId, catData] of Object.entries(mdData)){
+      const rankings = catData.rankings || {};
+      for(let i=1;i<=3;i++){
+        const pos = rankings[`pos_0${i}`] || {};
+        if(nameEq(pos.nama||'', stuName))
+          mdRes.push({ acara:`Merentas Desa (${catId})`, tempat:i, result:'' });
+      }
+    }
+
+    /* 9 — Olahragawan */
+    let anugerah = null;
+    for(const gKey of ['L','P']){
+      const o = olahData[gKey]||{};
+      if(nameEq(o.nama||'', stuName))
+        anugerah = { title: o.title||'Olahragawan', tahun: o.tahunSekolah||TAHUN };
+    }
+
+    setLoading(false);
+    render({ stuName, stuKelas, stuRumah, myUnits, jawatanMap, unitNameLU,
+             hadir, total, myRekod, sukanRes, mdRes, anugerah });
+
+  }catch(err){
+    setLoading(false);
+    console.error(err);
+    showErr('❌ Ralat sistem: '+err.message+'. Sila cuba sebentar lagi.');
+  }
+};
+
+/* ── RENDER ── */
+function render(d){
+  const { stuName, stuKelas, stuRumah, myUnits, jawatanMap, unitNameLU,
+          hadir, total, myRekod, sukanRes, mdRes, anugerah } = d;
+  let h = '';
+
+  /* Student card */
+  h += `<div class="stu-card">
+    <div class="stu-name">${stuName}</div>
+    <div class="tags">
+      <span class="tag tag-kelas">📚 Kelas: ${stuKelas||'-'}</span>
+      ${stuRumah?`<span class="tag ${rumahCls(stuRumah)}">🏠 Rumah ${stuRumah}</span>`:''}
+    </div>
+  </div>`;
+
+  /* Unit kokurikulum */
+  h += `<div class="sec">🏅 Unit Kokurikulum</div>`;
+  if(!myUnits.length){
+    h += `<div style="background:var(--surface);border-radius:var(--r);padding:22px;text-align:center;color:var(--slate);font-size:.84rem;box-shadow:var(--sh)">Tiada rekod unit kokurikulum dijumpai.</div>`;
+  } else {
+    for(const u of myUnits){
+      const uid  = u.unitId;
+      const uNm  = unitNameLU[uid] || u.unitKey || uid;
+      const {ico,bg,bdg,jenis} = unitMeta(uid, uNm);
+      const h_   = hadir[uid]||0;
+      const t_   = total[uid]||0;
+      const pct  = t_>0 ? Math.round(h_/t_*100) : null;
+      const jaw  = jawatanMap[norm(uNm)] || '';
+      h += `<div class="unit-card">
+        <div class="unit-ico" style="background:${bg}">${ico}</div>
+        <div class="unit-info">
+          <div class="unit-name">${uNm}</div>
+          <span class="unit-badge ${bdg}">${jenis}</span>
+          ${jaw?`<div class="unit-jaw">Jawatan: <span>${jaw}</span></div>`:''}
+        </div>
+        <div class="unit-pct ${pct!==null?pctCls(pct):'pct-mid'}">${pct!==null?pct+'%':'—'}</div>
+      </div>`;
+    }
+  }
+
+  /* Rekod penyertaan & pencapaian */
+  if(myRekod.length){
+    h += `<div class="sec">📜 Rekod Penyertaan & Pencapaian ${TAHUN}</div>`;
+    myRekod.forEach((r,i)=>{
+      const isPen  = r.eventType==='Penyertaan';
+      const hasKed = r.achievementPosition && r.achievementPosition.trim();
+      const tarikh = r.competitionDate ? r.competitionDate.split('-').reverse().join('/') : '';
+      const med    = hasKed ? medalEmoji(r.achievementPosition) : '';
+      h += `<div class="rekod-card">
+        <div class="rekod-num">${i+1}</div>
+        <div class="rtags">
+          <span class="rtag ${isPen?'rtag-pen':'rtag-cai'}">${r.eventType||'Penyertaan'}</span>
+          ${r.competitionLevel?`<span class="rtag ${lvlCls(r.competitionLevel)}">${r.competitionLevel}</span>`:''}
+          ${hasKed?`<span class="rtag ${kedCls(r.achievementPosition)}">Kedudukan: ${r.achievementPosition}</span>`:''}
+        </div>
+        <div class="rekod-name">${r.competitionName||'-'}</div>
+        <div class="rekod-meta">
+          ${r.unitName?`<span>📁 ${r.unitName}</span>`:''}
+          ${r.organizer?`<span>🏢 ${r.organizer}</span>`:''}
+          ${tarikh?`<span>📅 ${tarikh}</span>`:''}
+        </div>
+        ${r.certificateUrl?`<a href="${r.certificateUrl}" target="_blank" class="sijil-btn">📄 Lihat Sijil</a>`:''}
+        ${med?`<div class="medal-float">${med}</div>`:''}
+      </div>`;
+    });
+  }
+
+  /* Pencapaian sukan */
+  const allSukan = [...sukanRes, ...mdRes];
+  if(anugerah || allSukan.length){
+    h += `<div class="sec">🏆 Pencapaian Sukan ${TAHUN}</div>`;
+    if(anugerah){
+      h += `<div class="anugerah-card">
+        <div class="anugerah-ico">🏆</div>
+        <div>
+          <div class="anugerah-label">Anugerah Sukan Tahunan</div>
+          <div class="anugerah-title">${anugerah.title}</div>
+          <div class="anugerah-sub">Tahun ${anugerah.tahun}</div>
+        </div>
+      </div>`;
+    }
+    if(allSukan.length){
+      let e=0,p=0,g=0;
+      allSukan.forEach(s=>{ if(s.tempat===1)e++; else if(s.tempat===2)p++; else if(s.tempat===3)g++; });
+      if(e+p+g){
+        h += `<div class="medal-summary">`;
+        if(e) h += `<div class="mbadge mbadge-emas">🥇 ${e} Emas</div>`;
+        if(p) h += `<div class="mbadge mbadge-perak">🥈 ${p} Perak</div>`;
+        if(g) h += `<div class="mbadge mbadge-gangsa">🥉 ${g} Gangsa</div>`;
+        h += `</div>`;
+      }
+      h += `<div class="sukan-list">`;
+      allSukan.forEach(s=>{
+        h += `<div class="sukan-item">
+          <div class="sdot ${dotCls(s.tempat)}"></div>
+          <div class="sacara">${s.acara||'-'}</div>
+          <div class="sked">${tempatLabel(s.tempat)}${s.result?' &bull; '+s.result:''}</div>
+        </div>`;
+      });
+      h += `</div>`;
+    }
+  }
+
+  /* Empty fallback */
+  if(!myUnits.length && !myRekod.length && !allSukan.length && !anugerah){
+    h += `<div style="background:var(--surface);border-radius:var(--r);box-shadow:var(--sh);padding:32px;text-align:center">
+      <div style="font-size:2.5rem;margin-bottom:12px">📭</div>
+      <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;margin-bottom:6px">Tiada Rekod Kokurikulum</div>
+      <div style="font-size:.82rem;color:var(--slate)">Profil murid ditemui tetapi tiada rekod kokurikulum buat masa ini.</div>
+    </div>`;
+  }
+
+  const el = document.getElementById('result');
+  el.innerHTML = h;
+  el.style.display = 'block';
+  el.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+/* ── INPUT ── */
+document.getElementById('icIn').addEventListener('input', function(){ this.value = this.value.replace(/\D/g,''); });
+document.getElementById('icIn').addEventListener('keydown', e=>{ if(e.key==='Enter') window.semak(); });
+</script>
+</body>
+</html>
