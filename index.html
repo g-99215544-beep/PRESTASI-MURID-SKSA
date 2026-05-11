@@ -205,6 +205,12 @@ const db   = getDatabase(app);
 const auth = getAuth(app);
 await signInAnonymously(auth);
 const TAHUN = 2026;
+const MD_CAT={T1L:'Tahun 1 Lelaki',T1P:'Tahun 1 Perempuan',T2L:'Tahun 2 Lelaki',T2P:'Tahun 2 Perempuan',T3L:'Tahun 3 Lelaki',T3P:'Tahun 3 Perempuan',T4L:'Tahun 4 Lelaki',T4P:'Tahun 4 Perempuan',T5L:'Tahun 5 Lelaki',T5P:'Tahun 5 Perempuan',T6L:'Tahun 6 Lelaki',T6P:'Tahun 6 Perempuan'};
+const MEDAL_PAL={
+  emas: {ro:'#C8920A',rm:'#F0B429',di:'#FFD93D',sf:'#C8920A',ss:'#FFF5B0',lbl:'#B07D08'},
+  perak:{ro:'#8A9BB0',rm:'#B8C4D0',di:'#DDE4EE',sf:'#6B7A90',ss:'#FFFFFF',lbl:'#64748b'},
+  gangsa:{ro:'#A05C28',rm:'#C47838',di:'#E8975A',sf:'#7C3A12',ss:'#FDDCC0',lbl:'#92400e'},
+};
 
 /* ── HELPERS ── */
 function norm(s){
@@ -320,6 +326,48 @@ function formatDateMY(d){
   const days=['Ahd','Isn','Sel','Rab','Kha','Jum','Sab'];
   const mos=['Jan','Feb','Mac','Apr','Mei','Jun','Jul','Ogos','Sep','Okt','Nov','Dis'];
   return `${days[dt.getDay()]}, ${dt.getDate()} ${mos[dt.getMonth()]} ${dt.getFullYear()}`;
+}
+
+function medalIconSVG(type,w){
+  const p=MEDAL_PAL[type]||MEDAL_PAL.gangsa;
+  const h=Math.round((w/54)*76);
+  return `<svg width="${w}" height="${h}" viewBox="0 0 54 76" fill="none">
+    <path d="M10 2 L23 2 L28 38 L19 38 Z" fill="#E53E3E" stroke="#1a1a1a" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M13 2 L20 2 L24 34 L19 34 Z" fill="#FC8181" opacity="0.55"/>
+    <path d="M31 2 L44 2 L35 38 L26 38 Z" fill="#C53030" stroke="#1a1a1a" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M34 2 L40 2 L35 34 L30 34 Z" fill="#FC8181" opacity="0.38"/>
+    <rect x="19" y="36" width="16" height="10" rx="2" fill="#EFEFEF" stroke="#1a1a1a" stroke-width="2"/>
+    <rect x="22" y="38.5" width="10" height="5" rx="1" fill="#D4D4D4"/>
+    <circle cx="28" cy="62" r="14.5" fill="#00000025"/>
+    <circle cx="27" cy="60" r="15" fill="#1a1a1a"/>
+    <circle cx="27" cy="60" r="13.5" fill="${p.ro}"/>
+    <circle cx="27" cy="60" r="11.5" fill="${p.rm}"/>
+    <circle cx="27" cy="60" r="9.5" fill="${p.di}" stroke="#1a1a1a" stroke-width="1"/>
+    <path d="M19.5 53.5 Q27 47 34.5 53.5" stroke="${p.ss}" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.55"/>
+    <polygon points="27,52.5 29,57 34.6,57.4 30.5,61 31.9,66.5 27,63.5 22.1,66.5 23.5,61 19.4,57.4 25,57" fill="${p.sf}" stroke="#1a1a1a" stroke-width="1" stroke-linejoin="round"/>
+    <polygon points="27,52.5 29,57 34.6,57.4 30.5,61 31.9,66.5 27,63.5 22.1,66.5 23.5,61 19.4,57.4 25,57" fill="${p.ss}" opacity="0.18"/>
+  </svg>`;
+}
+function medalClusterHTML(medals){
+  const sorted=[...medals].sort((a,b)=>a.tempat-b.tempat);
+  const iw=44,ov=Math.round(iw*0.3);
+  const cnt={1:0,2:0,3:0};
+  sorted.forEach(m=>{if(m.tempat>=1&&m.tempat<=3)cnt[m.tempat]++;});
+  const icons=sorted.map((m,i)=>{
+    const t=m.tempat===1?'emas':m.tempat===2?'perak':'gangsa';
+    const ml=i===0?0:-ov;
+    const zi=sorted.length-i;
+    const sh=i===0?'none':'drop-shadow(0 0 1px rgba(0,0,0,.15))';
+    return `<div style="margin-left:${ml}px;z-index:${zi};position:relative;filter:${sh}">${medalIconSVG(t,iw)}</div>`;
+  }).join('');
+  let lbls='';
+  if(cnt[1]) lbls+=`<div style="color:${MEDAL_PAL.emas.lbl}">${cnt[1]} Emas</div>`;
+  if(cnt[2]) lbls+=`<div style="color:${MEDAL_PAL.perak.lbl}">${cnt[2]} Perak</div>`;
+  if(cnt[3]) lbls+=`<div style="color:${MEDAL_PAL.gangsa.lbl}">${cnt[3]} Gangsa</div>`;
+  return `<div style="display:flex;flex-direction:column;align-items:center;user-select:none;flex-shrink:0">
+    <div style="display:flex;align-items:flex-end;padding-left:${ov}px">${icons}</div>
+    <div style="margin-top:8px;font-size:.75rem;font-weight:600;text-align:center;line-height:1.5">${lbls}</div>
+  </div>`;
 }
 
 function showErr(m){ const e=document.getElementById('errMsg'); e.textContent=m; e.style.display='block'; }
@@ -446,8 +494,12 @@ window.semak = async function(){
     const sukanRes=[];
     for(const ev of Object.values(sukanKed)){
       for(const k of (ev.keputusan||[])){
-        if(nameEq(k.nama||'',stuName))
-          sukanRes.push({acara:ev.acaraNama,tempat:k.tempat,result:k.result||''});
+        const rawNama=k.nama||'';
+        const lines=rawNama.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+        const isGroup=lines.length>1;
+        const names=isGroup?lines.map(l=>l.replace(/^\d+\.\s*/,'')).filter(Boolean):lines;
+        if(names.some(n=>nameEq(n,stuName)))
+          sukanRes.push({acara:ev.acaraNama,tempat:k.tempat,jenisAcara:isGroup?'BERKUMPULAN':'PERSEORANGAN'});
       }
     }
     const mdRes=[];
@@ -455,7 +507,7 @@ window.semak = async function(){
       for(let i=1;i<=3;i++){
         const pos=(catData.rankings||{})[`pos_0${i}`]||{};
         if(nameEq(pos.nama||'',stuName))
-          mdRes.push({acara:`Merentas Desa (${catId})`,tempat:i,result:''});
+          mdRes.push({acara:`Merentas Desa ${MD_CAT[catId]||catId}`,tempat:i,jenisAcara:'PERSEORANGAN'});
       }
     }
     let anugerah=null;
@@ -632,24 +684,23 @@ function render(d){
       </div>`;
     }
     if(allSukan.length){
-      let e=0,p=0,g=0;
-      allSukan.forEach(s=>{ if(s.tempat===1)e++; else if(s.tempat===2)p++; else if(s.tempat===3)g++; });
-      if(e+p+g){
-        h+=`<div class="medal-summary">`;
-        if(e) h+=`<div class="mbadge mbadge-emas">🥇 ${e} Emas</div>`;
-        if(p) h+=`<div class="mbadge mbadge-perak">🥈 ${p} Perak</div>`;
-        if(g) h+=`<div class="mbadge mbadge-gangsa">🥉 ${g} Gangsa</div>`;
-        h+=`</div>`;
-      }
-      h+=`<div class="sukan-list">`;
-      allSukan.forEach(s=>{
-        h+=`<div class="sukan-item">
-          <div class="sdot ${dotCls(s.tempat)}"></div>
-          <div class="sacara">${s.acara||'-'}</div>
-          <div class="sked">${tempatLabel(s.tempat)}${s.result?' &bull; '+s.result:''}</div>
-        </div>`;
+      const sorted=[...allSukan].sort((a,b)=>a.tempat-b.tempat);
+      h+=`<div style="border:1px solid var(--border);border-radius:var(--r);padding:16px;background:var(--surface);margin-bottom:12px;display:flex;flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:16px">
+        <ul style="flex:1;min-width:180px;list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px">`;
+      sorted.forEach(s=>{
+        const t=s.tempat===1?'emas':s.tempat===2?'perak':'gangsa';
+        const dot=MEDAL_PAL[t].rm;
+        const ked=tempatLabel(s.tempat);
+        const berk=s.jenisAcara==='BERKUMPULAN'?' - Berkumpulan':'';
+        h+=`<li style="display:flex;align-items:flex-start;gap:8px">
+          <span style="margin-top:6px;flex-shrink:0;display:inline-block;width:8px;height:8px;border-radius:50%;background:${dot}"></span>
+          <div>
+            <p style="font-weight:700;font-size:.87rem;color:#1e293b;line-height:1.3;margin:0">${s.acara||'-'}</p>
+            <p style="font-size:.75rem;color:#64748b;margin:2px 0 0">${ked}${berk}</p>
+          </div>
+        </li>`;
       });
-      h+=`</div>`;
+      h+=`</ul>${medalClusterHTML(allSukan)}</div>`;
     }
   }
 
