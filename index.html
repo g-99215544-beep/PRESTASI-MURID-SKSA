@@ -702,8 +702,9 @@ function render(d){
     }
     if(allSukan.length){
       const sorted=[...allSukan].sort((a,b)=>a.tempat-b.tempat);
-      h+=`<div style="border:1px solid var(--border);border-radius:var(--r);padding:16px;background:var(--surface);margin-bottom:12px;display:flex;flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:16px">
-        <ul style="flex:1;min-width:180px;list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px">`;
+      h+=`<div style="border:1px solid var(--border);border-radius:var(--r);padding:16px;background:var(--surface);margin-bottom:12px;display:flex;flex-direction:column;gap:16px">
+        ${medalClusterHTML(allSukan)}
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px">`;
       sorted.forEach(s=>{
         const t=s.tempat===1?'emas':s.tempat===2?'perak':'gangsa';
         const dot=MEDAL_PAL[t].rm;
@@ -717,7 +718,7 @@ function render(d){
           </div>
         </li>`;
       });
-      h+=`</ul>${medalClusterHTML(allSukan)}</div>`;
+      h+=`</ul></div>`;
     }
   }
 
