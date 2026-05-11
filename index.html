@@ -47,9 +47,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .not-found p{font-size:.82rem;color:var(--slate)}
 
 /* ── STUDENT CARD ── */
-.stu-card{background:#e8f0fe;border-radius:var(--r);box-shadow:var(--sh);padding:22px 20px;margin-bottom:16px}
-.stu-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.1rem;font-weight:900;color:var(--blue);text-transform:uppercase;letter-spacing:.2px;line-height:1.3;margin-bottom:8px}
-.stu-kelas{font-size:.82rem;font-weight:600;color:var(--blue-mid);margin-bottom:10px}
+.stu-card{background:var(--surface);border-radius:var(--r);box-shadow:var(--sh);padding:22px 20px;margin-bottom:16px;border-left:5px solid var(--blue)}
+.stu-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.1rem;font-weight:900;color:var(--blue);text-transform:uppercase;letter-spacing:.2px;line-height:1.3;margin-bottom:10px}
 .tags{display:flex;gap:7px;flex-wrap:wrap}
 .tag{display:inline-flex;align-items:center;padding:4px 11px;border-radius:20px;font-size:.73rem;font-weight:700;gap:4px}
 .tag-kuning{background:#fef9c3;color:#854d0e}
@@ -208,6 +207,12 @@ const db   = getDatabase(app);
 const auth = getAuth(app);
 await signInAnonymously(auth);
 const TAHUN = 2026;
+const MD_CAT={T1L:'Tahun 1 Lelaki',T1P:'Tahun 1 Perempuan',T2L:'Tahun 2 Lelaki',T2P:'Tahun 2 Perempuan',T3L:'Tahun 3 Lelaki',T3P:'Tahun 3 Perempuan',T4L:'Tahun 4 Lelaki',T4P:'Tahun 4 Perempuan',T5L:'Tahun 5 Lelaki',T5P:'Tahun 5 Perempuan',T6L:'Tahun 6 Lelaki',T6P:'Tahun 6 Perempuan'};
+const MEDAL_PAL={
+  emas: {ro:'#C8920A',rm:'#F0B429',di:'#FFD93D',sf:'#C8920A',ss:'#FFF5B0',lbl:'#B07D08'},
+  perak:{ro:'#8A9BB0',rm:'#B8C4D0',di:'#DDE4EE',sf:'#6B7A90',ss:'#FFFFFF',lbl:'#64748b'},
+  gangsa:{ro:'#A05C28',rm:'#C47838',di:'#E8975A',sf:'#7C3A12',ss:'#FDDCC0',lbl:'#92400e'},
+};
 
 /* ── HELPERS ── */
 function norm(s){
@@ -323,6 +328,48 @@ function formatDateMY(d){
   const days=['Ahd','Isn','Sel','Rab','Kha','Jum','Sab'];
   const mos=['Jan','Feb','Mac','Apr','Mei','Jun','Jul','Ogos','Sep','Okt','Nov','Dis'];
   return `${days[dt.getDay()]}, ${dt.getDate()} ${mos[dt.getMonth()]} ${dt.getFullYear()}`;
+}
+
+function medalIconSVG(type,w){
+  const p=MEDAL_PAL[type]||MEDAL_PAL.gangsa;
+  const h=Math.round((w/54)*76);
+  return `<svg width="${w}" height="${h}" viewBox="0 0 54 76" fill="none">
+    <path d="M10 2 L23 2 L28 38 L19 38 Z" fill="#E53E3E" stroke="#1a1a1a" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M13 2 L20 2 L24 34 L19 34 Z" fill="#FC8181" opacity="0.55"/>
+    <path d="M31 2 L44 2 L35 38 L26 38 Z" fill="#C53030" stroke="#1a1a1a" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M34 2 L40 2 L35 34 L30 34 Z" fill="#FC8181" opacity="0.38"/>
+    <rect x="19" y="36" width="16" height="10" rx="2" fill="#EFEFEF" stroke="#1a1a1a" stroke-width="2"/>
+    <rect x="22" y="38.5" width="10" height="5" rx="1" fill="#D4D4D4"/>
+    <circle cx="28" cy="62" r="14.5" fill="#00000025"/>
+    <circle cx="27" cy="60" r="15" fill="#1a1a1a"/>
+    <circle cx="27" cy="60" r="13.5" fill="${p.ro}"/>
+    <circle cx="27" cy="60" r="11.5" fill="${p.rm}"/>
+    <circle cx="27" cy="60" r="9.5" fill="${p.di}" stroke="#1a1a1a" stroke-width="1"/>
+    <path d="M19.5 53.5 Q27 47 34.5 53.5" stroke="${p.ss}" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.55"/>
+    <polygon points="27,52.5 29,57 34.6,57.4 30.5,61 31.9,66.5 27,63.5 22.1,66.5 23.5,61 19.4,57.4 25,57" fill="${p.sf}" stroke="#1a1a1a" stroke-width="1" stroke-linejoin="round"/>
+    <polygon points="27,52.5 29,57 34.6,57.4 30.5,61 31.9,66.5 27,63.5 22.1,66.5 23.5,61 19.4,57.4 25,57" fill="${p.ss}" opacity="0.18"/>
+  </svg>`;
+}
+function medalClusterHTML(medals){
+  const sorted=[...medals].sort((a,b)=>a.tempat-b.tempat);
+  const iw=44,ov=Math.round(iw*0.3);
+  const cnt={1:0,2:0,3:0};
+  sorted.forEach(m=>{if(m.tempat>=1&&m.tempat<=3)cnt[m.tempat]++;});
+  const icons=sorted.map((m,i)=>{
+    const t=m.tempat===1?'emas':m.tempat===2?'perak':'gangsa';
+    const ml=i===0?0:-ov;
+    const zi=sorted.length-i;
+    const sh=i===0?'none':'drop-shadow(0 0 1px rgba(0,0,0,.15))';
+    return `<div style="margin-left:${ml}px;z-index:${zi};position:relative;filter:${sh}">${medalIconSVG(t,iw)}</div>`;
+  }).join('');
+  let lbls='';
+  if(cnt[1]) lbls+=`<div style="color:${MEDAL_PAL.emas.lbl}">${cnt[1]} Emas</div>`;
+  if(cnt[2]) lbls+=`<div style="color:${MEDAL_PAL.perak.lbl}">${cnt[2]} Perak</div>`;
+  if(cnt[3]) lbls+=`<div style="color:${MEDAL_PAL.gangsa.lbl}">${cnt[3]} Gangsa</div>`;
+  return `<div style="display:flex;flex-direction:column;align-items:center;user-select:none;flex-shrink:0">
+    <div style="display:flex;align-items:flex-end;padding-left:${ov}px">${icons}</div>
+    <div style="margin-top:8px;font-size:.75rem;font-weight:600;text-align:center;line-height:1.5">${lbls}</div>
+  </div>`;
 }
 
 function showErr(m){ const e=document.getElementById('errMsg'); e.textContent=m; e.style.display='block'; }
@@ -449,8 +496,12 @@ window.semak = async function(){
     const sukanRes=[];
     for(const ev of Object.values(sukanKed)){
       for(const k of (ev.keputusan||[])){
-        if(nameEq(k.nama||'',stuName))
-          sukanRes.push({acara:ev.acaraNama,tempat:k.tempat,result:k.result||''});
+        const rawNama=k.nama||'';
+        const lines=rawNama.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+        const isGroup=lines.length>1;
+        const names=isGroup?lines.map(l=>l.replace(/^\d+\.\s*/,'')).filter(Boolean):lines;
+        if(names.some(n=>nameEq(n,stuName)))
+          sukanRes.push({acara:ev.acaraNama,tempat:k.tempat,jenisAcara:isGroup?'BERKUMPULAN':'PERSEORANGAN'});
       }
     }
     const mdRes=[];
@@ -458,7 +509,7 @@ window.semak = async function(){
       for(let i=1;i<=3;i++){
         const pos=(catData.rankings||{})[`pos_0${i}`]||{};
         if(nameEq(pos.nama||'',stuName))
-          mdRes.push({acara:`Merentas Desa (${catId})`,tempat:i,result:''});
+          mdRes.push({acara:`Merentas Desa ${MD_CAT[catId]||catId}`,tempat:i,jenisAcara:'PERSEORANGAN'});
       }
     }
     let anugerah=null;
@@ -490,8 +541,10 @@ function render(d){
   /* Student card */
   h+=`<div class="stu-card">
     <div class="stu-name">${stuName}</div>
-    <div class="stu-kelas">Kelas: ${stuKelas||'-'}</div>
-    <div class="tags">${stuRumah?`<span class="tag ${rumahCls(stuRumah)}">Rumah ${stuRumah}</span>`:''}</div>
+    <div class="tags">
+      ${stuRumah?`<span class="tag ${rumahCls(stuRumah)}">🏠 Rumah ${stuRumah}</span>`:''}
+      <span class="tag tag-kelas">📚 Kelas: ${stuKelas||'-'}</span>
+    </div>
   </div>`;
 
   /* Unit kokurikulum */
@@ -577,30 +630,45 @@ function render(d){
   /* Rekod penyertaan & pencapaian */
   if(myRekod.length){
     h+=`<div class="sec">📜 Rekod Penyertaan & Pencapaian ${TAHUN}</div>`;
+    h+=`<div style="display:flex;flex-direction:column;gap:12px;padding-top:12px">`;
     myRekod.forEach((r,i)=>{
-      const isPen=r.eventType==='Penyertaan';
-      const hasKed=r.achievementPosition&&r.achievementPosition.trim();
-      const tarikh=r.competitionDate?r.competitionDate.split('-').reverse().join('/'):'';
-      const med=hasKed?medalSVG(r.achievementPosition):'';
-      h+=`<div class="rekod-card">
-        ${med?`<div class="rekod-medal">${med}</div>`:''}
-        <div class="rekod-top">
-          <div class="rekod-num-svg">${numSVG(i+1)}</div>
-          <div class="rekod-tags">
-            <span class="rtag ${isPen?'rtag-pen':'rtag-cai'}">${r.eventType||'Penyertaan'}</span>
-            ${r.competitionLevel?`<span class="rtag ${lvlCls(r.competitionLevel)}">${r.competitionLevel}</span>`:''}
-            ${hasKed?`<span class="rtag ${kedCls(r.achievementPosition)}">Kedudukan: ${r.achievementPosition}</span>`:''}
+      const isPen=r.eventType!=='Pencapaian';
+      const hasKed=!isPen&&r.achievementPosition&&r.achievementPosition.trim();
+      const tarikh=r.competitionDate?new Date(r.competitionDate).toLocaleDateString('ms-MY'):'-';
+      let rekodMedal='';
+      if(hasKed){
+        const pos=(r.achievementPosition||'').toLowerCase();
+        const type=pos==='johan'?'emas':pos==='naib johan'?'perak':(pos.includes('ketiga')||pos==='3')?'gangsa':'';
+        if(type){
+          rekodMedal=`<div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;user-select:none;padding-top:4px">
+            ${medalIconSVG(type,54)}
+            <span style="font-size:.72rem;font-weight:700;margin-top:-4px;color:${MEDAL_PAL[type].lbl}">${r.achievementPosition}</span>
+          </div>`;
+        }
+      }
+      h+=`<div style="border:1px solid #e2e8f0;border-radius:8px;padding:16px;background:#fff;display:flex;align-items:flex-start;gap:12px;position:relative">
+        <svg width="26" height="26" viewBox="0 0 26 26" style="position:absolute;top:-10px;left:-10px;filter:drop-shadow(0 1px 3px rgba(0,0,0,.25))">
+          <circle cx="13" cy="13" r="13" fill="#b91c1c"/>
+          <text x="13" y="17.5" text-anchor="middle" font-size="${i+1>=10?9:11}" font-weight="800" fill="white" font-family="sans-serif">${i+1}</text>
+        </svg>
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:8px">
+            <span style="font-size:.75rem;font-weight:700;padding:4px 8px;border-radius:6px;${isPen?'background:#dbeafe;color:#1d4ed8':'background:#dcfce7;color:#15803d'}">${r.eventType||'Penyertaan'}</span>
+            ${hasKed?`<span style="font-size:.75rem;font-weight:700;padding:4px 8px;border-radius:6px;background:#fef9c3;color:#854d0e">Kedudukan: ${r.achievementPosition}</span>`:''}
+            ${r.competitionLevel?`<span style="font-size:.75rem;font-weight:600;padding:4px 8px;border-radius:6px;background:#f3f4f6;color:#374151">${r.competitionLevel}</span>`:''}
           </div>
+          <p style="font-weight:700;color:#1e293b;margin:0 0 4px">${r.competitionName||'-'}</p>
+          <div style="font-size:.875rem;color:#4b5563;display:flex;flex-wrap:wrap;gap:0 12px;margin-top:4px">
+            ${r.unitName?`<span>Unit: ${r.unitName}</span>`:''}
+            ${r.organizer?`<span>Anjuran: ${r.organizer}</span>`:''}
+            <span>Tarikh: ${tarikh}</span>
+          </div>
+          ${r.certificateUrl?`<a href="${r.certificateUrl}" target="_blank" style="display:inline-block;margin-top:8px;font-size:.875rem;color:#1d4ed8;font-weight:600;text-decoration:none">Lihat Sijil</a>`:''}
         </div>
-        <div class="rekod-name">${r.competitionName||'-'}</div>
-        <div class="rekod-meta">
-          ${r.unitName?`<span>Unit: ${r.unitName}</span>`:''}
-          ${r.organizer?`<span>Anjuran: ${r.organizer}</span>`:''}
-          ${tarikh?`<span>Tarikh: ${tarikh}</span>`:''}
-        </div>
-        ${r.certificateUrl?`<a href="${r.certificateUrl}" target="_blank" class="sijil-btn">📄 Lihat Sijil</a>`:''}
+        ${rekodMedal}
       </div>`;
     });
+    h+=`</div>`;
   }
 
   /* Pencapaian sukan */
@@ -608,38 +676,48 @@ function render(d){
   if(anugerah||allSukan.length){
     h+=`<div class="sec">🏆 Pencapaian Sukan ${TAHUN}</div>`;
     if(anugerah){
-      h+=`<div class="anugerah-card">
-        <div class="anugerah-ico">🏆</div>
-        <div>
-          <div class="anugerah-label">Anugerah Sukan Tahunan</div>
-          <div class="anugerah-title">${anugerah.title}</div>
-          <div class="anugerah-sub">Tahun ${anugerah.tahun}</div>
+      h+=`<div style="background:#fffdf5;border:2px solid #d4a017;border-radius:14px;padding:14px 16px;box-shadow:0 4px 18px rgba(212,160,23,.13);position:relative;overflow:hidden;margin-bottom:12px">
+        <svg style="position:absolute;top:8px;right:10px;opacity:.12;pointer-events:none" width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <path d="M24 2l3.6 10.8H38.5l-9.2 6.7 3.5 10.8L24 23.5l-8.8 6.8 3.5-10.8-9.2-6.7h10.9L24 2Z" fill="#c9922a"/>
+        </svg>
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="flex-shrink:0;width:52px;height:52px;background:linear-gradient(145deg,#f5d078 0%,#e8b420 50%,#c9922a 100%);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 12px rgba(212,160,23,.45)">
+            <svg width="28" height="30" viewBox="0 0 28 32" fill="none">
+              <path d="M4 1h20v11c0 5.523-4.029 10-9 10s-11-4.477-11-10V1Z" fill="white" fill-opacity="0.25" stroke="#7a4a00" stroke-width="1.6" stroke-linejoin="round"/>
+              <path d="M4 4.5H2C1.172 4.5.5 5.172.5 6v2.5A4 4 0 0 0 4.5 12.5" stroke="#7a4a00" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+              <path d="M24 4.5h2c.828 0 1.5.672 1.5 1.5V8.5a4 4 0 0 1-4 4" stroke="#7a4a00" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+              <path d="M12 22h4v4h-4z" fill="#7a4a00" fill-opacity="0.35" stroke="#7a4a00" stroke-width="1.2" stroke-linejoin="round"/>
+              <rect x="7.5" y="26" width="13" height="3.5" rx="1.75" fill="#7a4a00" fill-opacity="0.35" stroke="#7a4a00" stroke-width="1.2"/>
+              <path d="M14 5.5l1.1 3.3h3.5l-2.8 2 1.1 3.3-2.9-2.1-2.9 2.1 1.1-3.3-2.8-2h3.5L14 5.5Z" fill="white" fill-opacity="0.55"/>
+              <path d="M6.5 3.5c0 1.8.8 3.5 1.8 5" stroke="white" stroke-width="1" stroke-linecap="round" stroke-opacity="0.5"/>
+            </svg>
+          </div>
+          <div style="flex:1;min-width:0">
+            <p style="font-size:9px;font-weight:900;letter-spacing:.13em;text-transform:uppercase;color:#b8860b;margin-bottom:3px">Anugerah Sukan Tahunan</p>
+            <p style="font-weight:900;font-size:18px;color:#1a1a1a;line-height:1.15;margin-bottom:2px">${anugerah.title}</p>
+            <p style="font-size:12px;font-weight:700;color:#9a6e00">Tahun ${anugerah.tahun}</p>
+          </div>
         </div>
       </div>`;
     }
     if(allSukan.length){
-      let e=0,p=0,g=0;
-      allSukan.forEach(s=>{ if(s.tempat===1)e++; else if(s.tempat===2)p++; else if(s.tempat===3)g++; });
-      if(e+p+g){
-        h+=`<div class="medal-row-card"><div class="medal-row">`;
-        for(let i=0;i<e;i++) h+=medalSVG('1');
-        for(let i=0;i<p;i++) h+=medalSVG('2');
-        for(let i=0;i<g;i++) h+=medalSVG('3');
-        h+=`</div><div class="medal-summary">`;
-        if(e) h+=`<div class="mbadge mbadge-emas">🥇 ${e} Emas</div>`;
-        if(p) h+=`<div class="mbadge mbadge-perak">🥈 ${p} Perak</div>`;
-        if(g) h+=`<div class="mbadge mbadge-gangsa">🥉 ${g} Gangsa</div>`;
-        h+=`</div></div>`;
-      }
-      h+=`<div class="sukan-list">`;
-      allSukan.forEach(s=>{
-        h+=`<div class="sukan-item">
-          <div class="sdot ${dotCls(s.tempat)}"></div>
-          <div class="sacara">${s.acara||'-'}</div>
-          <div class="sked">${tempatLabel(s.tempat)}${s.result?' &bull; '+s.result:''}</div>
-        </div>`;
+      const sorted=[...allSukan].sort((a,b)=>a.tempat-b.tempat);
+      h+=`<div style="border:1px solid var(--border);border-radius:var(--r);padding:16px;background:var(--surface);margin-bottom:12px;display:flex;flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:16px">
+        <ul style="flex:1;min-width:180px;list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px">`;
+      sorted.forEach(s=>{
+        const t=s.tempat===1?'emas':s.tempat===2?'perak':'gangsa';
+        const dot=MEDAL_PAL[t].rm;
+        const ked=tempatLabel(s.tempat);
+        const berk=s.jenisAcara==='BERKUMPULAN'?' - Berkumpulan':'';
+        h+=`<li style="display:flex;align-items:flex-start;gap:8px">
+          <span style="margin-top:6px;flex-shrink:0;display:inline-block;width:8px;height:8px;border-radius:50%;background:${dot}"></span>
+          <div>
+            <p style="font-weight:700;font-size:.87rem;color:#1e293b;line-height:1.3;margin:0">${s.acara||'-'}</p>
+            <p style="font-size:.75rem;color:#64748b;margin:2px 0 0">${ked}${berk}</p>
+          </div>
+        </li>`;
       });
-      h+=`</div>`;
+      h+=`</ul>${medalClusterHTML(allSukan)}</div>`;
     }
   }
 
