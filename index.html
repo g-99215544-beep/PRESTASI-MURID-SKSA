@@ -62,21 +62,27 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .not-found h3{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;margin-bottom:6px}
 .not-found p{font-size:.82rem;color:var(--slate)}
 
-.stu-card{background:var(--surface);border-radius:var(--r);box-shadow:var(--sh);padding:20px 22px;margin-bottom:16px;border-left:5px solid var(--blue)}
-.stu-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.05rem;font-weight:900;color:var(--blue);text-transform:uppercase;letter-spacing:.2px;margin-bottom:10px}
+/* ── STUDENT CARD ── */
+.stu-card{background:#e8f0fe;border-radius:var(--r);box-shadow:var(--sh);padding:22px 20px;margin-bottom:16px}
+.stu-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.1rem;font-weight:900;color:var(--blue);text-transform:uppercase;letter-spacing:.2px;line-height:1.3;margin-bottom:8px}
+.stu-kelas{font-size:.82rem;font-weight:600;color:var(--blue-mid);margin-bottom:10px}
 .tags{display:flex;gap:7px;flex-wrap:wrap}
 .tag{display:inline-flex;align-items:center;padding:4px 11px;border-radius:20px;font-size:.73rem;font-weight:700;gap:4px}
-.tag-kelas{background:#e0e7ff;color:#3730a3}
 .tag-kuning{background:#fef9c3;color:#854d0e}
 .tag-merah{background:var(--red-bg);color:#991b1b}
 .tag-hijau{background:var(--green-bg);color:#065f46}
 .tag-biru{background:#dbeafe;color:#1e40af}
+.tag-kelas{background:#e0e7ff;color:#3730a3}
 
 .sec{font-family:'Plus Jakarta Sans',sans-serif;font-size:.88rem;font-weight:800;color:var(--text);margin:22px 0 11px;display:flex;align-items:center;gap:9px}
 .sec::after{content:'';flex:1;height:2px;background:var(--border);border-radius:2px}
 
-.unit-card{background:var(--surface);border-radius:var(--r);box-shadow:var(--sh);padding:15px 18px;margin-bottom:9px;display:flex;align-items:center;gap:14px;transition:box-shadow .18s}
+/* ── UNIT CARDS ── */
+.unit-card{background:var(--surface);border-radius:var(--r);box-shadow:var(--sh);padding:15px 18px;margin-bottom:9px;display:flex;align-items:center;gap:14px;transition:box-shadow .18s;border-left:4px solid transparent}
 .unit-card:hover{box-shadow:var(--sh-md)}
+.ucb-red  {border-left-color:#dc2626}
+.ucb-amber{border-left-color:#d97706}
+.ucb-blue {border-left-color:#2563eb}
 .unit-ico{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
 .unit-info{flex:1;min-width:0}
 .unit-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -84,14 +90,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .badge-ub{background:var(--red-bg);color:#991b1b}
 .badge-kp{background:var(--amber-bg);color:#92400e}
 .badge-s{background:var(--green-bg);color:#065f46}
-.unit-pct{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.15rem;font-weight:800;min-width:56px;text-align:right}
+.unit-right{display:flex;align-items:center;gap:4px}
+.unit-pct{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.15rem;font-weight:800;min-width:46px;text-align:right}
+.unit-arr{color:#94a3b8;font-size:.85rem;margin-top:1px}
 .pct-100{color:var(--green)}
 .pct-hi{color:#16a34a}
 .pct-mid{color:var(--amber)}
 .pct-lo{color:var(--red)}
+.pct-dash{color:#94a3b8}
 .unit-jaw{font-size:.72rem;color:var(--slate);font-weight:500;margin-top:3px}
 .unit-jaw span{color:var(--blue);font-weight:700}
 
+/* ── REKOD CARDS ── */
 .rekod-card{background:var(--surface);border-radius:var(--r);box-shadow:var(--sh);padding:17px 20px;margin-bottom:11px;position:relative}
 .rekod-num{width:24px;height:24px;background:var(--blue);color:#fff;border-radius:50%;font-size:.7rem;font-weight:700;display:inline-flex;align-items:center;justify-content:center;margin-bottom:10px}
 .rtags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
@@ -107,10 +117,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .rtag-j3{background:#fde8d3;color:#7c3909}
 .rekod-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.93rem;text-transform:uppercase;margin-bottom:6px}
 .rekod-meta{font-size:.77rem;color:var(--slate);display:flex;gap:12px;flex-wrap:wrap}
-.medal-float{position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:2.2rem}
+.medal-float{position:absolute;right:18px;top:18px;font-size:2.4rem}
 .sijil-btn{display:inline-flex;align-items:center;gap:5px;margin-top:10px;font-size:.76rem;font-weight:700;color:var(--blue);padding:5px 12px;background:var(--blue-lite);border-radius:8px;text-decoration:none;transition:background .15s}
 .sijil-btn:hover{background:#c7d2fe}
 
+/* ── ANUGERAH & SUKAN ── */
 .anugerah-card{background:linear-gradient(135deg,#fffbeb,#fef3c7);border:2px solid #f59e0b;border-radius:var(--r);padding:16px 20px;margin-bottom:12px;display:flex;align-items:center;gap:14px}
 .anugerah-ico{font-size:2.8rem}
 .anugerah-label{font-size:.68rem;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:.8px}
@@ -210,7 +221,7 @@ const TAHUN = 2026;
 /* ── HELPERS ── */
 function norm(s){
   return (s||'').toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .normalize('NFD').replace(/[̀-ͯ]/g,'')
     .replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim();
 }
 const nameEq = (a,b) => norm(a) === norm(b);
@@ -230,16 +241,16 @@ function rumahCls(r){
 function unitMeta(uid, uName){
   const u = (uid||'').toLowerCase();
   const n = (uName||'').toLowerCase();
-  if(u.startsWith('ub'))                           return {ico:'🎖️',bg:'#fee2e2',bdg:'badge-ub',jenis:'Unit Beruniform'};
-  if(u.startsWith('s'))                            return {ico:'⚽',bg:'#d1fae5',bdg:'badge-s', jenis:'1 Murid 1 Sukan (1M1S)'};
-  if(n.includes('muzik')||n.includes('kebudayaan'))return {ico:'🎵',bg:'#fef9c3',bdg:'badge-kp',jenis:'Kelab & Persatuan'};
-  if(n.includes('stem')||n.includes('robotik'))    return {ico:'🤖',bg:'#fef9c3',bdg:'badge-kp',jenis:'Kelab & Persatuan'};
-  if(n.includes('doktor'))                         return {ico:'🩺',bg:'#fef9c3',bdg:'badge-kp',jenis:'Kelab & Persatuan'};
-  if(n.includes('agama')||n.includes('islam'))     return {ico:'📖',bg:'#fef9c3',bdg:'badge-kp',jenis:'Kelab & Persatuan'};
-  if(n.includes('bahasa'))                         return {ico:'💬',bg:'#fef9c3',bdg:'badge-kp',jenis:'Kelab & Persatuan'};
-  if(n.includes('kitar'))                          return {ico:'♻️',bg:'#fef9c3',bdg:'badge-kp',jenis:'Kelab & Persatuan'};
-  if(n.includes('tvpss')||n.includes('sumber'))    return {ico:'📺',bg:'#fef9c3',bdg:'badge-kp',jenis:'Kelab & Persatuan'};
-  return {ico:'⭐',bg:'#fef9c3',bdg:'badge-kp',jenis:'Kelab & Persatuan'};
+  if(u.startsWith('ub'))                            return {ico:'🎖️',bg:'#fee2e2',bdg:'badge-ub',jenis:'Unit Beruniform',borderCls:'ucb-red'};
+  if(u.startsWith('s'))                             return {ico:'⚽',bg:'#d1fae5',bdg:'badge-s', jenis:'1 Murid 1 Sukan (1M1S)',borderCls:'ucb-blue'};
+  if(n.includes('muzik')||n.includes('kebudayaan')) return {ico:'🎵',bg:'#fef9c3',bdg:'badge-kp',jenis:'Kelab & Persatuan',borderCls:'ucb-amber'};
+  if(n.includes('stem')||n.includes('robotik'))     return {ico:'🤖',bg:'#fef9c3',bdg:'badge-kp',jenis:'Kelab & Persatuan',borderCls:'ucb-amber'};
+  if(n.includes('doktor'))                          return {ico:'🩺',bg:'#fef9c3',bdg:'badge-kp',jenis:'Kelab & Persatuan',borderCls:'ucb-amber'};
+  if(n.includes('agama')||n.includes('islam'))      return {ico:'📖',bg:'#fef9c3',bdg:'badge-kp',jenis:'Kelab & Persatuan',borderCls:'ucb-amber'};
+  if(n.includes('bahasa'))                          return {ico:'💬',bg:'#fef9c3',bdg:'badge-kp',jenis:'Kelab & Persatuan',borderCls:'ucb-amber'};
+  if(n.includes('kitar'))                           return {ico:'♻️',bg:'#fef9c3',bdg:'badge-kp',jenis:'Kelab & Persatuan',borderCls:'ucb-amber'};
+  if(n.includes('tvpss')||n.includes('sumber'))     return {ico:'📺',bg:'#fef9c3',bdg:'badge-kp',jenis:'Kelab & Persatuan',borderCls:'ucb-amber'};
+  return {ico:'⭐',bg:'#fef9c3',bdg:'badge-kp',jenis:'Kelab & Persatuan',borderCls:'ucb-amber'};
 }
 
 const pctCls = p => p===100?'pct-100':p>=80?'pct-hi':p>=60?'pct-mid':'pct-lo';
@@ -256,16 +267,16 @@ function lvlCls(l){
 
 function kedCls(k){
   const c = (k||'').toLowerCase();
-  if(c.includes('pertama')||c==='1'||c==='johan')    return 'rtag-j1';
+  if(c.includes('pertama')||c==='1'||c==='johan')      return 'rtag-j1';
   if(c.includes('kedua')||c==='2'||c.includes('naib')) return 'rtag-j2';
   return 'rtag-j3';
 }
 
 function medalEmoji(k){
   const c = (k||'').toLowerCase();
-  if(c.includes('pertama')||c==='1'||c==='johan')    return '🥇';
+  if(c.includes('pertama')||c==='1'||c==='johan')      return '🥇';
   if(c.includes('kedua')||c==='2'||c.includes('naib')) return '🥈';
-  if(c.includes('ketiga')||c==='3')                  return '🥉';
+  if(c.includes('ketiga')||c==='3')                    return '🥉';
   return '';
 }
 
@@ -326,18 +337,20 @@ window.semak = async function(){
     const mdData    = gv(mdSnap) || {};
     const olahData  = gv(olSnap) || {};
 
-    /* 3 — Unit murid */
+    /* 3 — Unit murid (deduplicate by unitId) */
     const myUnits = [];
+    const seenUnitIds = new Set();
     for(const [uKey, uData] of Object.entries(uStudents)){
+      const uid = uData.unitId || uKey;
+      if(seenUnitIds.has(uid)) continue;
       const classes = uData.classes || {};
-      let found = false;
       for(const students of Object.values(classes)){
         if(Array.isArray(students) && students.some(s => nameEq(s, stuName))){
-          myUnits.push({ unitId: uData.unitId || uKey, unitKey: uKey });
-          found = true; break;
+          myUnits.push({ unitId: uid, unitKey: uKey });
+          seenUnitIds.add(uid);
+          break;
         }
       }
-      if(found) continue;
     }
 
     /* 4 — Jawatan carta organisasi */
@@ -354,7 +367,7 @@ window.semak = async function(){
     }
 
     /* 5 — Kehadiran */
-    const unitNameLU = {};   // unitId → unitName
+    const unitNameLU = {};
     const hadir = {};
     const total = {};
     for(const rec of Object.values(kHadir)){
@@ -370,6 +383,16 @@ window.semak = async function(){
         }
       }
     }
+
+    /* Also deduplicate by display name (handles same unit under different keys) */
+    const seenUnitNames = new Set();
+    const dedupedUnits = myUnits.filter(u => {
+      const uNm = unitNameLU[u.unitId] || u.unitKey || u.unitId;
+      const k = norm(uNm);
+      if(seenUnitNames.has(k)) return false;
+      seenUnitNames.add(k);
+      return true;
+    });
 
     /* 6 — Achievement reports */
     const myRekod = [];
@@ -408,7 +431,7 @@ window.semak = async function(){
     }
 
     setLoading(false);
-    render({ stuName, stuKelas, stuRumah, myUnits, jawatanMap, unitNameLU,
+    render({ stuName, stuKelas, stuRumah, myUnits: dedupedUnits, jawatanMap, unitNameLU,
              hadir, total, myRekod, sukanRes, mdRes, anugerah });
 
   }catch(err){
@@ -427,9 +450,9 @@ function render(d){
   /* Student card */
   h += `<div class="stu-card">
     <div class="stu-name">${stuName}</div>
+    <div class="stu-kelas">Kelas: ${stuKelas||'-'}</div>
     <div class="tags">
-      <span class="tag tag-kelas">📚 Kelas: ${stuKelas||'-'}</span>
-      ${stuRumah?`<span class="tag ${rumahCls(stuRumah)}">🏠 Rumah ${stuRumah}</span>`:''}
+      ${stuRumah?`<span class="tag ${rumahCls(stuRumah)}">Rumah ${stuRumah}</span>`:''}
     </div>
   </div>`;
 
@@ -441,19 +464,22 @@ function render(d){
     for(const u of myUnits){
       const uid  = u.unitId;
       const uNm  = unitNameLU[uid] || u.unitKey || uid;
-      const {ico,bg,bdg,jenis} = unitMeta(uid, uNm);
+      const {ico,bg,bdg,jenis,borderCls} = unitMeta(uid, uNm);
       const h_   = hadir[uid]||0;
       const t_   = total[uid]||0;
       const pct  = t_>0 ? Math.round(h_/t_*100) : null;
       const jaw  = jawatanMap[norm(uNm)] || '';
-      h += `<div class="unit-card">
+      h += `<div class="unit-card ${borderCls}">
         <div class="unit-ico" style="background:${bg}">${ico}</div>
         <div class="unit-info">
           <div class="unit-name">${uNm}</div>
           <span class="unit-badge ${bdg}">${jenis}</span>
           ${jaw?`<div class="unit-jaw">Jawatan: <span>${jaw}</span></div>`:''}
         </div>
-        <div class="unit-pct ${pct!==null?pctCls(pct):'pct-mid'}">${pct!==null?pct+'%':'—'}</div>
+        <div class="unit-right">
+          <div class="unit-pct ${pct!==null?pctCls(pct):'pct-dash'}">${pct!==null?pct+'%':'—'}</div>
+          <span class="unit-arr">&#9660;</span>
+        </div>
       </div>`;
     }
   }
@@ -468,6 +494,7 @@ function render(d){
       const med    = hasKed ? medalEmoji(r.achievementPosition) : '';
       h += `<div class="rekod-card">
         <div class="rekod-num">${i+1}</div>
+        ${med?`<div class="medal-float">${med}</div>`:''}
         <div class="rtags">
           <span class="rtag ${isPen?'rtag-pen':'rtag-cai'}">${r.eventType||'Penyertaan'}</span>
           ${r.competitionLevel?`<span class="rtag ${lvlCls(r.competitionLevel)}">${r.competitionLevel}</span>`:''}
@@ -475,12 +502,11 @@ function render(d){
         </div>
         <div class="rekod-name">${r.competitionName||'-'}</div>
         <div class="rekod-meta">
-          ${r.unitName?`<span>📁 ${r.unitName}</span>`:''}
-          ${r.organizer?`<span>🏢 ${r.organizer}</span>`:''}
-          ${tarikh?`<span>📅 ${tarikh}</span>`:''}
+          ${r.unitName?`<span>Unit: ${r.unitName}</span>`:''}
+          ${r.organizer?`<span>Anjuran: ${r.organizer}</span>`:''}
+          ${tarikh?`<span>Tarikh: ${tarikh}</span>`:''}
         </div>
         ${r.certificateUrl?`<a href="${r.certificateUrl}" target="_blank" class="sijil-btn">📄 Lihat Sijil</a>`:''}
-        ${med?`<div class="medal-float">${med}</div>`:''}
       </div>`;
     });
   }
