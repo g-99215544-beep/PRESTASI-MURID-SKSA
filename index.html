@@ -351,10 +351,12 @@ function medalIconSVG(type,w){
   </svg>`;
 }
 function medalClusterHTML(medals){
-  const sorted=[...medals].sort((a,b)=>a.tempat-b.tempat);
+  const eligible=medals.filter(m=>m.tempat>=1&&m.tempat<=3);
+  if(!eligible.length) return '';
+  const sorted=[...eligible].sort((a,b)=>a.tempat-b.tempat);
   const iw=44,ov=Math.round(iw*0.3);
   const cnt={1:0,2:0,3:0};
-  sorted.forEach(m=>{if(m.tempat>=1&&m.tempat<=3)cnt[m.tempat]++;});
+  sorted.forEach(m=>{cnt[m.tempat]++;});
   const icons=sorted.map((m,i)=>{
     const t=m.tempat===1?'emas':m.tempat===2?'perak':'gangsa';
     const ml=i===0?0:-ov;
